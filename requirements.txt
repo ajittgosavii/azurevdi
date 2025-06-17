@@ -1,0 +1,12 @@
+# VDI Migration Assessment Tool - Requirements
+streamlit>=1.29.0
+pandas>=2.1.4
+numpy>=1.26.0,<2.0.0
+plotly>=5.17.0
+anthropic>=0.8.1
+requests>=2.31.0
+boto3>=1.28.0
+openpyxl>=3.1.2
+reportlab>=4.0.0
+python-dateutil>=2.8.2
+kaleido>=0.2.1

@@ -8375,135 +8375,7 @@ def test_claude_ai_connection():
         except Exception as e:
             st.error(f"❌ Test failed: {str(e)}")
 
-def main():
-    """Main Streamlit application"""
-    
-    initialize_session_state()
-    
-    # Header
-    st.markdown("""
-    <div class="enterprise-header">
-        <h1>🚀 Enterprise AWS Database Migration Tool</h1>
-        <p>AI-Powered Analysis • Real-time AWS Pricing • Comprehensive Risk Assessment</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Sidebar navigation
-    with st.sidebar:
-        st.markdown("## 🧭 Navigation")
-        page = st.radio(
-            "Select Section:",
-            [
-                "🔧 Migration Configuration",
-                "📊 Environment Setup",
-                "🌐 Network Analysis",
-                "🚀 Analysis & Recommendations",
-                "📈 Results Dashboard",
-                "📄 Reports & Export"
-            ]
-        )
-    
-    if hasattr(st.session_state, 'vrops_analysis') and st.session_state.vrops_analysis:
-        st.success("✅ vROps analysis complete")
-    
-    health_scores = []
-    vrops_analysis = getattr(st.session_state, 'vrops_analysis', None)
-    if vrops_analysis is not None and isinstance(vrops_analysis, dict):
-        for env_name, analysis in vrops_analysis.items():
-    
-            if health_scores:
-                avg_health = sum(health_scores) / len(health_scores)
-                st.metric("Avg Health Score", f"{avg_health:.1f}/100")
-            else:
-                st.info("ℹ️ vROps analysis pending")
-    
-        # Status indicators
-                st.markdown("### 📋 Status")
-        
-    env_specs = getattr(st.session_state, 'environment_specs', {})
-    if env_specs and len(env_specs) > 0:
-            st.success(f"✅ {len(st.session_state.environment_specs)} environments configured")
-    else:
-            st.warning("⚠️ Configure environments")
-        
-    if st.session_state.migration_params:
-            st.success("✅ Migration parameters set")
-    else:
-            st.warning("⚠️ Set migration parameters")
-        
-        # Check for both regular and enhanced analysis results
-    has_regular_results = st.session_state.analysis_results is not None
-    has_enhanced_results = hasattr(st.session_state, 'enhanced_analysis_results') and st.session_state.enhanced_analysis_results is not None
-        
-    if has_regular_results or has_enhanced_results:
-            st.success("✅ Analysis complete")
-            
-            # Show metrics from whichever analysis was completed
-            if has_enhanced_results:
-                results = st.session_state.enhanced_analysis_results
-                st.metric("Monthly Cost", f"${results['monthly_aws_cost']:,.0f}")
-                st.metric("Migration Cost", f"${results['migration_costs']['total']:,.0f}")
-                st.info("🔬 Enhanced Analysis")
-            elif has_regular_results:
-                results = st.session_state.analysis_results
-                st.metric("Monthly Cost", f"${results['monthly_aws_cost']:,.0f}")
-                st.metric("Migration Cost", f"${results['migration_costs']['total']:,.0f}")
-                st.info("📊 Standard Analysis")
-    else:
-            st.info("ℹ️ Analysis pending")
-        
-        # Network analysis status
-    if hasattr(st.session_state, 'transfer_analysis') and st.session_state.transfer_analysis:
-            st.success("✅ Network analysis complete")
-            recommendations = st.session_state.transfer_analysis.get('recommendations', {})
-            primary = recommendations.get('primary_recommendation', {})
-            if primary:
-                st.metric("Recommended Pattern", primary.get('pattern_name', 'N/A'))
-    else:
-            st.info("ℹ️ Network analysis pending")
-        
-        # vROps analysis status
-    if hasattr(st.session_state, 'vrops_analysis') and st.session_state.vrops_analysis:
-            st.success("✅ vROps analysis complete")
-            
-            health_scores = []
-            for env_name, analysis in st.session_state.vrops_analysis.items():
-                if isinstance(analysis, dict) and 'performance_scores' in analysis:
-                    health_scores.append(analysis['performance_scores'].get('overall_health', 0))
-            
-            if health_scores:
-                avg_health = sum(health_scores) / len(health_scores)
-                st.metric("Avg Health Score", f"{avg_health:.1f}/100")
-    else:
-            st.info("ℹ️ vROps analysis pending")
-        
-        # Debug info (optional)
-    if st.checkbox("🐛 Show Debug Info"):
-            st.markdown("### Debug Information")
-            st.write("Environment specs:", bool(st.session_state.environment_specs))
-            st.write("Migration params:", bool(st.session_state.migration_params))
-            st.write("Analysis results:", bool(st.session_state.analysis_results))
-            st.write("Enhanced results:", bool(hasattr(st.session_state, 'enhanced_analysis_results') and st.session_state.enhanced_analysis_results))
-            
-    if st.session_state.environment_specs:
-                st.write("Num environments:", len(st.session_state.environment_specs))
-                st.write("Enhanced data:", is_enhanced_environment_data(st.session_state.environment_specs))
-    
-    # Main content area - THIS IS THE KEY FIX
-    if page == "🔧 Migration Configuration":
-        show_migration_configuration()
-    elif page == "📊 Environment Setup":
-        show_enhanced_environment_setup_with_cluster_config()
-    elif page == "🌐 Network Analysis":
-        show_network_transfer_analysis()
-    elif page == "🚀 Analysis & Recommendations":
-        show_analysis_section_fixed()
-    elif page == "📈 Results Dashboard":
-        show_results_dashboard()
-    elif page == "📄 Reports & Export":
-        show_reports_section()
-    else:
-        # Default page
+def show_sidebar_metrics():        # Default page
         st.markdown("## Welcome to the AWS Database Migration Tool")
         st.markdown("Please select a section from the sidebar to get started.")
 
@@ -9006,7 +8878,7 @@ def show_analysis_section_fixed():
 
 # ADD THIS FUNCTION to your streamlit_app.py file:
 
-ddef run_streamlit_migration_analysis():
+def run_streamlit_migration_analysis():
     """Run migration analysis with auto-refreshing growth projections"""
     
     try:
